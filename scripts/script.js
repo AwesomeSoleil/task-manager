@@ -1,5 +1,13 @@
 (function() {
-    let tasks;//
+
+    let tasks;
+    if (localStorage.getItem('tasks')) {
+        tasks = JSON.parse(localStorage.getItem('tasks'));                           
+    } else {
+        tasks = [];
+    }
+
+//  *************** form ***************
     const mount = document.querySelector('#mount');
     const list = document.createElement('ul');
     const form = document.createElement('form');
@@ -13,14 +21,20 @@
     const submitButton = document.createElement('input');
     submitButton.setAttribute('type', 'submit');
     submitButton.setAttribute('value', 'add new task');
+    const showCompleted = document.createElement('input');
+    showCompleted.setAttribute('type', 'checkbox');
+    showCompleted.addEventListener('click', filter('completed'));
     form.appendChild(input);
     form.appendChild(calendar);
     form.appendChild(submitButton);
+    form.appendChild(showCompleted);
     form.addEventListener('submit', addTask);
     mount.appendChild(form);
     mount.appendChild(list);
 
-    renderList();
+//  *************** form ***************
+
+    renderList(tasks);
 
     function Task(subject, dueDate) {
         if (dueDate == '') {
@@ -43,6 +57,7 @@
         removeTaskButton.addEventListener('click', removeTask);
         const checkbox = document.createElement('input');
         checkbox.setAttribute('type', 'checkbox');
+        checkbox.checked = task.isCompleted;
         checkbox.addEventListener('click', toggleCompleted);
         listItem.appendChild(checkbox);
         listItem.appendChild(removeTaskButton);
@@ -51,21 +66,36 @@
 
     function addTask(event) {
         event.preventDefault();
-//        let tasks;
-        if (localStorage.getItem('tasks')) {
-            tasks = JSON.parse(localStorage.getItem('tasks'));                           
-        } else {
-            tasks = [];
-        }
         tasks.push(new Task(input.value, calendar.value));
         localStorage.setItem('tasks', JSON.stringify(tasks));           
         createListItem(input.value);
         form.reset();
-        renderList();
+        renderList(tasks);
     }
 
-    function renderList() {
-        const tasks = JSON.parse(localStorage.getItem('tasks'));
+    function removeTask(event) {
+        const index = tasks.findIndex(function(task) { return task.id == event.path[1].id });
+        tasks.splice(index, 1);
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+        renderList(tasks);
+    }
+
+    function toggleCompleted(event) {
+        const task = tasks.find(function(task) { return task.id == event.path[1].id });
+        task.isCompleted = !task.isCompleted;
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+    }
+
+    function filter(criteria) {
+        let filteredTasks;
+        if (criteria === 'completed') {
+        filteredTasks = tasks.filter(function(task) {return task.isCompleted === true});
+    }
+        console.log(filteredTasks);
+        renderList(filteredTasks);
+    }
+
+    function renderList(tasks) {
         list.innerHTML = '';
         if(tasks) {
             tasks.forEach(function(task) {
@@ -73,21 +103,5 @@
                 }
             );
         }   
-    }
-
-    function removeTask(event) {
-        const tasks = JSON.parse(localStorage.getItem('tasks'));
-        const index = tasks.findIndex(function(task) { return task.id == event.path[1].id });
-        tasks.splice(index, 1);
-        localStorage.setItem('tasks', JSON.stringify(tasks));
-        renderList();
-    }
-
-    function toggleCompleted(event) {
-        const tasks = JSON.parse(localStorage.getItem('tasks'));
-        const task = tasks.find(function(task) { return task.id == event.path[1].id });
-        console.log('befor toggle ', task.isCompleted);
-        task.isCompleted = !task.isCompleted;
-        localStorage.setItem('tasks', JSON.stringify(tasks));
     }
 }());
