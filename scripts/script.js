@@ -1,5 +1,5 @@
 (function() {
-
+    let tasks;//
     const mount = document.querySelector('#mount');
     const list = document.createElement('ul');
     const form = document.createElement('form');
@@ -23,27 +23,35 @@
     renderList();
 
     function Task(subject, dueDate) {
+        if (dueDate == '') {
+            this.dueDate = 'not specified';
+        } else {
+            this.dueDate = dueDate;
+        }
         this.id = Date.now();
         this.subject = subject;
-        this.dueDate = dueDate;
+        this.isCompleted = false;
     }
 
     function createListItem(task) {
         const listItem = document.createElement('li');
-//        listItem.setAttribute('id', task.id);
-        const removeTaskButton = document.createElement('button');
+        listItem.setAttribute('id', task.id);
         listItem.appendChild(document.createTextNode(`${task.subject} deadline: ${task.dueDate}`));
+        const removeTaskButton = document.createElement('button');
         removeTaskButton.setAttribute('type', 'button');
-        removeTaskButton.setAttribute('id', task.id);
         removeTaskButton.appendChild(document.createTextNode('x'));
         removeTaskButton.addEventListener('click', removeTask);
+        const checkbox = document.createElement('input');
+        checkbox.setAttribute('type', 'checkbox');
+        checkbox.addEventListener('click', toggleCompleted);
+        listItem.appendChild(checkbox);
         listItem.appendChild(removeTaskButton);
         list.appendChild(listItem);
     }
 
     function addTask(event) {
         event.preventDefault();
-        let tasks;
+//        let tasks;
         if (localStorage.getItem('tasks')) {
             tasks = JSON.parse(localStorage.getItem('tasks'));                           
         } else {
@@ -69,9 +77,17 @@
 
     function removeTask(event) {
         const tasks = JSON.parse(localStorage.getItem('tasks'));
-        const taskToRemove = tasks.findIndex(function(task) { return task.id == event.target.id });
-        tasks.splice(taskToRemove, 1);
+        const index = tasks.findIndex(function(task) { return task.id == event.path[1].id });
+        tasks.splice(index, 1);
         localStorage.setItem('tasks', JSON.stringify(tasks));
         renderList();
+    }
+
+    function toggleCompleted(event) {
+        const tasks = JSON.parse(localStorage.getItem('tasks'));
+        const task = tasks.find(function(task) { return task.id == event.path[1].id });
+        console.log('befor toggle ', task.isCompleted);
+        task.isCompleted = !task.isCompleted;
+        localStorage.setItem('tasks', JSON.stringify(tasks));
     }
 }());
