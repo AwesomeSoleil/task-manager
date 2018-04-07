@@ -12,22 +12,23 @@
     const list = document.createElement('ul');
     const form = document.createElement('form');
     const input = document.createElement('input');
-    input.setAttribute('name', 'subject');
+    input.setAttribute('type', 'text');
     input.setAttribute('placeholder', 'enter new task');
     input.required = true;
     const calendar = document.createElement('input');
     calendar.setAttribute('type', 'date');
-    calendar.setAttribute('name', 'due');
+    calendar.setAttribute('min', `${new Date().toISOString().split('T')[0]}`);
     const submitButton = document.createElement('input');
     submitButton.setAttribute('type', 'submit');
     submitButton.setAttribute('value', 'add new task');
     const showCompleted = document.createElement('input');
     showCompleted.setAttribute('type', 'checkbox');
-    showCompleted.addEventListener('click', filter('completed'));
+    showCompleted.setAttribute('name', 'completed');
+    showCompleted.addEventListener('click', filter);
     form.appendChild(input);
     form.appendChild(calendar);
     form.appendChild(submitButton);
-    form.appendChild(showCompleted);
+//    form.appendChild(showCompleted);
     form.addEventListener('submit', addTask);
     mount.appendChild(form);
     mount.appendChild(list);
@@ -50,17 +51,30 @@
     function createListItem(task) {
         const listItem = document.createElement('li');
         listItem.setAttribute('id', task.id);
-        listItem.appendChild(document.createTextNode(`${task.subject} deadline: ${task.dueDate}`));
+        const subjectField = document.createElement('div');
+        subjectField.className = 'task-subject';
+        subjectField.appendChild(document.createTextNode(`${task.subject}`));
+        const dueDateField = document.createElement('div');
+        dueDateField.className = 'task-deadline';
+        dueDateField.appendChild(document.createTextNode(`${task.dueDate}`));
+        const deleteButton = document.createElement('div');
+        deleteButton.className = 'task-delete';        
         const removeTaskButton = document.createElement('button');
         removeTaskButton.setAttribute('type', 'button');
         removeTaskButton.appendChild(document.createTextNode('x'));
         removeTaskButton.addEventListener('click', removeTask);
+        deleteButton.appendChild(removeTaskButton);
+        const completedCheckbox = document.createElement('div');
+        completedCheckbox.className = 'task-completed';       
         const checkbox = document.createElement('input');
         checkbox.setAttribute('type', 'checkbox');
         checkbox.checked = task.isCompleted;
         checkbox.addEventListener('click', toggleCompleted);
-        listItem.appendChild(checkbox);
-        listItem.appendChild(removeTaskButton);
+        completedCheckbox.appendChild(checkbox);
+        listItem.appendChild(subjectField);
+        listItem.appendChild(dueDateField);
+        listItem.appendChild(completedCheckbox);
+        listItem.appendChild(deleteButton);
         list.appendChild(listItem);
     }
 
@@ -86,12 +100,11 @@
         localStorage.setItem('tasks', JSON.stringify(tasks));
     }
 
-    function filter(criteria) {
+    function filter() {
         let filteredTasks;
-        if (criteria === 'completed') {
+        if (event.target.name === 'completed') {
         filteredTasks = tasks.filter(function(task) {return task.isCompleted === true});
     }
-        console.log(filteredTasks);
         renderList(filteredTasks);
     }
 

@@ -1,0 +1,74 @@
+* {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1rem;
+}
+
+@media (min-width: 350px) {
+    form, ul {
+        width: 70%;
+        margin: 0 auto;
+    }
+}
+
+form, li {
+    display: flex;
+    flex-wrap: wrap;   
+}
+
+input[type="text"] {
+    flex: 2 0 300px;
+    box-sizing: border-box;
+    background:#E9E9E9;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 0.35em 0.75em;
+    border: none;
+    text-decoration: none;
+    line-height: normal;
+}
+
+input[type="date"] {
+    flex: 1 0 160px;
+    box-sizing: border-box;
+    background:#E9E9E9;
+    border: none;
+    padding: 0.35em 0.75em;
+}
+
+input[type="submit"] {
+    flex: 1 0 100px;
+    box-sizing: border-box;
+    border-radius: 0px 2px 2px 0px;
+    background: #8B798C;
+    font-weight: 300;
+    text-transform: uppercase;
+    color: white;
+    padding: 0.35em 0.75em;
+    border: none;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background: #C17CFF;
+}
+
+.task-subject {
+    flex: 2 0 100px;
+    text-overflow: hidden;
+}
+
+.task-deadline {
+    flex: 1 0 100px;
+}
+
+.task-completed {
+    flex: 1 0 30px;
+    cursor: pointer;
+}
+
+.task-delete {
+    flex: 1 0 30px;
+    cursor: pointer;
+}
