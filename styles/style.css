@@ -1,12 +1,16 @@
-* {
+#container {
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 1rem;
+    font-size: 1.1rem;
 }
 
 @media (min-width: 350px) {
-    form, ul {
+    #container {
         width: 70%;
         margin: 0 auto;
+    }
+    
+    fieldset {
+        width: 300px;
     }
 }
 
@@ -15,11 +19,18 @@ form, li {
     flex-wrap: wrap;   
 }
 
+ul {
+    padding: 0;
+    margin: 10px 0 0 0;
+    border-top: 1px solid #8B798C;
+}
+
 input[type="text"] {
     flex: 2 0 300px;
     box-sizing: border-box;
     background:#E9E9E9;
     overflow: hidden;
+    font-size: inherit;
     text-overflow: ellipsis;
     white-space: nowrap;
     padding: 0.35em 0.75em;
@@ -31,6 +42,7 @@ input[type="text"] {
 input[type="date"] {
     flex: 1 0 160px;
     box-sizing: border-box;
+    font-size: inherit;
     background:#E9E9E9;
     border: none;
     padding: 0.35em 0.75em;
@@ -41,6 +53,7 @@ input[type="submit"] {
     box-sizing: border-box;
     border-radius: 0px 2px 2px 0px;
     background: #8B798C;
+    font-size: inherit;
     font-weight: 300;
     text-transform: uppercase;
     color: white;
@@ -54,9 +67,51 @@ input[type="submit"]:hover {
     background: #C17CFF;
 }
 
+input[type="checkbox"] {
+    appearance: none;
+    border: none;
+    width: 20px;
+    height: 20px;
+}
+
+.task-delete button {
+    appearance: none;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: none;
+    color: crimson;
+    font-size: inherit;
+    font-weight: 800;
+    text-transform: uppercase;
+    background-color:#E9E9E9;
+}
+
+fieldset {
+    font-size: 0.9rem;
+    text-align: center;
+    color: gray;
+    border: 1px solid #8B798C;
+}
+
+fieldset label {
+    margin: 0 10px;
+}
+
+li {
+    background-color:#E9E9E9;
+    color: gray;
+    padding: 0.35em 0.75em;
+    border-bottom: 1px solid #8B798C;
+    text-align: center;
+}
+
 .task-subject {
     flex: 2 0 100px;
-    text-overflow: hidden;
+    text-align: initial;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .task-deadline {
@@ -65,10 +120,8 @@ input[type="submit"]:hover {
 
 .task-completed {
     flex: 1 0 30px;
-    cursor: pointer;
 }
 
 .task-delete {
     flex: 1 0 30px;
-    cursor: pointer;
 }
